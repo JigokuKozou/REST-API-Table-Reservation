@@ -1,21 +1,24 @@
 # REST-API-Table-Reservation
-REST API app 
+_REST API app_ 
 
 http://localhost:8080/api
-  /table - столы 
+  ## /table - столы 
     {
       "id": "id",
       "number": number,
       "countSeats": number
     }
-   Number стола должен быть уникальным, если в базе уже есть такой номер, то не получится добавить/изменить номер стола
-   Требуемые поля:
-                  create POST Body { number, countSeats }
-                  getAll GET - 
-                  get GET /id
-                  update PUT Body { id, ...изменяемый/(-е) параметр(-ы) }
-                  delete DEL /id
-  /person - люди
+
+   >Number стола должен быть уникальным, если в базе уже есть такой номер, то не получится добавить/изменить номер стола.
+
+__Требуемые поля:__
+ * create POST Body { number, countSeats }
+ * getAll GET [/](http://localhost:8080/api/table) 
+ * get GET [/id](http://localhost:8080/api/table/id)
+ * update PUT Body { id, ...изменяемый/(-е) параметр(-ы) }
+ * delete DEL [/id](http://localhost:8080/api/table/id)
+
+ ## /person - люди
     {
       "id": "id",
       "name": "Name",
@@ -23,15 +26,18 @@ http://localhost:8080/api
       "createdAt": "dateInISO",
       "updatedAt": "dateInISO"
     }
-  Date in ISO example: 2022-11-28T12:22:18.698Z
+  __Date in ISO__
+  >example: 2022-11-28T12:22:18.698Z
   Date.toISOString()
-  Требуемые поля:
-                  create POST Body { name, surname }
-                  getAll GET - 
-                  get GET /id
-                  update PUT Body { id, ...изменяемый/(-е) параметр(-ы) }
-                  delete DEL /id
-  /reservation - бронирования
+
+__Требуемые поля:__
+ * create POST Body { number, countSeats }
+ * getAll GET [/](http://localhost:8080/api/person)
+ * get GET [/id](http://localhost:8080/api/person)
+ * update PUT Body { id, ...изменяемый/(-е) параметр(-ы) }
+ * delete DEL [/id](http://localhost:8080/api/person/id)
+
+##  /reservation - бронирования
     {
       "id": "Id",
       "tableId": "tableId",
@@ -39,10 +45,10 @@ http://localhost:8080/api
       "bookingStartDate": "dateInISO",
       "bookingEndDate": "dateInISO"
     }
-    Требуемые поля:
-                  create POST Body { tableId, personId, bookingStartDate, bookingEndDate }
-                  getAll GET - 
-                  get GET /id
-                  update PUT Body { id, ...изменяемый/(-е) параметр(-ы) }
-                  delete DEL /id
-  
+
+__Требуемые поля:__
+ * create POST Body _{ tableId, personId, bookingStartDate, bookingEndDate }_
+ * getAll GET [/](http://localhost:8080/api/reservation)
+ * get GET [/id](http://localhost:8080/api/reservation/id)
+ * update PUT Body { id, ...изменяемый/(-е) параметр(-ы) }
+ * delete DEL [/id](http://localhost:8080/api/reservation/id)
