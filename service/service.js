@@ -51,10 +51,6 @@ class Service {
         }
 
         const element = formatter(snapshot)
-        
-        if (Service.hasSameValues(body, JSON.stringify(element), keys)) {
-            throw new Error('Missing parameter to change')
-        }
 
         return { documentReference, element }
     }
@@ -75,14 +71,6 @@ class Service {
     static ucFirst(str) {
         if (!str) return str;
         return str[0].toUpperCase() + str.slice(1);
-    }
-
-    static hasSameValues(body, element, keys) {
-        return !keys.some(key => {
-            if (element[key] instanceof body[key].className) {
-                body[key] != element[key]
-            }
-        });
     }
 }
 

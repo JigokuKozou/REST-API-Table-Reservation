@@ -1,7 +1,7 @@
 class Reservation {
-    constructor(tableId, personId, bookingStartDate, bookingEndDate, id) {
+    constructor(tableId, userId, bookingStartDate, bookingEndDate, id) {
         this.tableId = tableId
-        this.personId = personId
+        this.userId = userId
         this.bookingStartDate = bookingStartDate
         this.bookingEndDate = bookingEndDate
         this.id = id
@@ -16,13 +16,13 @@ class Reservation {
         this._tableId = value
     }
 
-    get personId() { return this._personId }
+    get userId() { return this._userId }
 
-    set personId(value) {
+    set userId(value) {
         if (value == undefined)
-            throw new Error("personId value cannot be undefined")
+            throw new Error("userId value cannot be undefined")
         
-        this._personId = value
+        this._userId = value
     }
 
     get bookingStartDate() { return this._bookingStartDate }
@@ -78,7 +78,7 @@ class Reservation {
     static fromFirestoreData(data) {
         return new Reservation(
             data.tableId, 
-            data.personId, 
+            data.userId, 
             data.bookingStartDate.toDate(), 
             data.bookingEndDate.toDate(),
             data.id
@@ -91,7 +91,7 @@ class Reservation {
         const firestoreData = {
             id: reservation.id,
             tableId: reservation.tableId,
-            personId: reservation.personId,
+            userId: reservation.userId,
             bookingStartDate: reservation.bookingStartDate,
             bookingEndDate: reservation.bookingEndDate
         }

@@ -1,8 +1,8 @@
 import express from 'express'
 import cors from 'cors'
-import personRouter from './routes/persons.routes.js'
-import tableRouter from './routes/tables.routes.js'
-import reservationRouter from './routes/reservations.routes.js'
+import userRouter from './routes/user.routes.js'
+import tableRouter from './routes/table.routes.js'
+import reservationRouter from './routes/reservation.routes.js'
 
 const PORT = process.env.PORT || 8080
 const app = express()
@@ -10,7 +10,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-app.use('/api', personRouter)
+app.use('/api', userRouter)
 app.use('/api', tableRouter)
 app.use('/api', reservationRouter)
 

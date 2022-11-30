@@ -1,4 +1,4 @@
-class Person {
+class User {
     constructor(name, surname, id, createdAt, updatedAt) {
         this.name = name
         this.surname = surname
@@ -28,7 +28,7 @@ class Person {
 
     set name(value) {
         value = value.trim()
-        if (Person.isUndefinedOrEmpty(value)) {
+        if (User.isUndefinedOrEmpty(value)) {
             throw new Error('name cannot be undefined or empty')
         }
 
@@ -39,7 +39,7 @@ class Person {
 
     set surname(value) {
         value = value.trim()
-        if (Person.isUndefinedOrEmpty(value)) {
+        if (User.isUndefinedOrEmpty(value)) {
             throw new Error('surname cannot be undefined or empty')
         }
 
@@ -75,7 +75,7 @@ class Person {
     }
 
     static fromFirestoreData(data) {
-        return new Person(
+        return new User(
             data.name, 
             data.surname, 
             data.id, 
@@ -84,15 +84,15 @@ class Person {
         )
     }
 
-    static toFirestoreData(person, showId = true) {
-        if (!person) throw new Error('person cannot be undefined')
+    static toFirestoreData(user, showId = true) {
+        if (!user) throw new Error('user cannot be undefined')
 
         const firestoreData = {
-            id: person.id,
-            name: person.name,
-            surname: person.surname,
-            createdAt: person.createdAt,
-            updatedAt: person.updatedAt
+            id: user.id,
+            name: user.name,
+            surname: user.surname,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
         }
 
         if (showId === false) {
@@ -103,8 +103,8 @@ class Person {
     }
 
     toFirestoreData(showId = true) {
-        return Person.toFirestoreData(this, showId)
+        return User.toFirestoreData(this, showId)
     }
 }
 
-export default Person
+export default User

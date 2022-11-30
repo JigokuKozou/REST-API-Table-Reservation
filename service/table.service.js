@@ -8,6 +8,9 @@ class TableService extends Service {
 
     async create({ number, countSeats }) {
         const table = new Table(number, countSeats)
+        if (await this.isTableNumberExist(number)) {
+            throw Error(`Table number ${number} already exists`)
+        }
 
         return super.create(table)
     }
@@ -46,7 +49,7 @@ class TableService extends Service {
     async isTableNumberExist(number) {
         const snapshot = await this.database.where('number', '==', number).get()
 
-        return snapshot.docs && snapshot.docs.length > 0
+        return snapshot?.docs?.length > 0
     }
 
     static snapshotToTable(snapshot) {

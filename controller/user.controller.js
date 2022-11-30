@@ -1,12 +1,12 @@
-import Person from '../model/person.js'
-import personService from '../service/person.service.js'
+import User from '../model/user.js'
+import userService from '../service/user.service.js'
 
-class PersonController {
+class UserController {
     async create(req, res) {
         try {
-            const person = PersonController.toJson(await personService.create(req.body))
+            const user = UserController.toJson(await userService.create(req.body))
 
-            res.json(person)
+            res.json(user)
         } catch (e) {
             res.status(500).json(e.message)
             console.log(e)
@@ -15,9 +15,9 @@ class PersonController {
     
     async getAll(req, res) {
         try {
-            const persons = (await personService.getAll()).map(PersonController.toJson)
+            const users = (await userService.getAll()).map(UserController.toJson)
             
-            res.json(persons)
+            res.json(users)
         } catch (e) {
             res.status(500).json(e.message)
             console.log(e)
@@ -26,9 +26,9 @@ class PersonController {
     
     async get(req, res) {
         try {
-            const person = PersonController.toJson(await personService.get(req.params.id))
+            const user = UserController.toJson(await userService.get(req.params.id))
 
-            res.json(person)
+            res.json(user)
         } catch (e) {
             res.status(500).json(e.message)
             console.log(e)
@@ -37,9 +37,9 @@ class PersonController {
     
     async update(req, res) {
         try {
-            const person = PersonController.toJson(await personService.update(req.body))
+            const user = UserController.toJson(await userService.update(req.body))
 
-            res.json(person)
+            res.json(user)
         } catch (e) {
             res.status(500).json(e.message)
             console.log(e)
@@ -48,7 +48,7 @@ class PersonController {
     
     async delete(req, res) {
         try {
-            const writeResult = await personService.delete(req.params.id)
+            const writeResult = await userService.delete(req.params.id)
     
             res.json(writeResult)
         } catch (e) {
@@ -58,8 +58,8 @@ class PersonController {
     }
 
     static toJson(person) {
-        return Person.toFirestoreData(person)
+        return User.toFirestoreData(person)
     }
 }
 
-export default new PersonController()
+export default new UserController()

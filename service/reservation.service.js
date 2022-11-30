@@ -1,15 +1,15 @@
 import Service from './service.js'
 import Reservation from '../model/reservation.js'
 import tableService from '../service/table.service.js'
-import personService from '../service/person.service.js'
+import userService from './user.service.js'
 
 class ReservationService extends Service {
     constructor() {
         super('Reservations', 'reservation')
     }
 
-    async create({ tableId, personId, bookingStartDate, bookingEndDate }) {
-        const reservation = new Reservation(tableId, personId, bookingStartDate, bookingEndDate)
+    async create({ tableId, userId, bookingStartDate, bookingEndDate }) {
+        const reservation = new Reservation(tableId, userId, bookingStartDate, bookingEndDate)
 
         await this.checkValidityReservation(reservation)
 
@@ -24,15 +24,15 @@ class ReservationService extends Service {
         return super.get(id, ReservationService.snapshotToReservation)
     }
     
-    async update({ id, tableId, personId, bookingStartDate, bookingEndDate }) {
-        const update = await super.update({ id, tableId, personId, bookingStartDate, bookingEndDate }, 
+    async update({ id, tableId, userId, bookingStartDate, bookingEndDate }) {
+        const update = await super.update({ id, tableId, userId, bookingStartDate, bookingEndDate }, 
             ReservationService.snapshotToReservation)
 
         const documentReference = update.documentReference
         const reservation = update.element
 
         reservation.tableId = tableId || reservation.tableId
-        reservation.personId = personId || reservation.personId
+        reservation.userId = userId || reservation.userId
         reservation.setBookingTime(bookingStartDate || reservation.bookingStartDate, bookingEndDate || reservation.bookingEndDate)
         
         await this.checkValidityReservation(reservation)
@@ -58,8 +58,8 @@ class ReservationService extends Service {
             throw new Error('Table is not exist')
         }
 
-        if (await ReservationService.isPersonExist(reservation.personId) === false) {
-            throw new Error('Person is not exist')
+        if (await ReservationService.isUserExist(reservation.userId) === false) {
+            throw new Error('User is not exist')
         }
 
         if (await this.isReservationBookingTimeValid(reservation) === false) {
@@ -71,8 +71,8 @@ class ReservationService extends Service {
         return (await tableService.get(tableId)) !== undefined
     }
 
-    static async isPersonExist(personId) {
-        return (await personService.get(personId)) !== undefined
+    static async isUserExist(userId) {
+        return (await userService.get(userId)) !== undefined
     }
 
     async isReservationBookingTimeValid(reservation) {
