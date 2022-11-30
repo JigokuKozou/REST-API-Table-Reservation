@@ -1,5 +1,7 @@
 # REST-API-Table-Reservation
-_REST API app_ 
+_REST API app_
+
+__Приватный ключ__ необходимо помемтить по пути __util/serviceAccount.json__
 
 http://localhost:8080/api
   ## /table - столы 
