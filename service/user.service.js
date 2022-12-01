@@ -6,30 +6,30 @@ class UserService extends Service {
         super('Users', 'user')
     }
 
-    async create({ name, surname }) {
-        const user = new User(name, surname)    
+    async create(requestedUser) {
+        const user = User.fromFirestoreData(requestedUser)
         
         return super.create(user)
     }
     
     async getAll() {
-        return super.getAll(UserService.snapshotToPerson)
+        return super.getAll(UserService.snapshotToUser)
     }
     
     async get(id) {
-        return super.get(id, UserService.snapshotToPerson)
+        return super.get(id, UserService.snapshotToUser)
     }
     
-    async update({ id, name, surname }) {
-        const update = await super.update({ id, name, surname }, 
-            UserService.snapshotToPerson)
+    async update({ id, login, password, phone }) {
+        const update = await super.update({ id, login, password, phone }, 
+            UserService.snapshotToUser)
 
         const documentReference = update.documentReference
         const user = update.element
 
-        user.name = name || user.name
-        user.surname = surname || user.surname
-        user.updatedAt = new Date()
+        user.login = login || user.login
+        user.password = password || user.password
+        user.phone = phone || user.phone
 
         await documentReference.set(user.toFirestoreData(false))
 
@@ -40,7 +40,7 @@ class UserService extends Service {
         return super.delete(id)
     }
 
-    static snapshotToPerson(snapshot) {
+    static snapshotToUser(snapshot) {
         return User.fromFirestoreData({ id: snapshot.id, ...snapshot.data() })
     }
 }

@@ -1,19 +1,9 @@
 class User {
-    constructor(name, surname, id, createdAt, updatedAt) {
-        this.name = name
-        this.surname = surname
-
+    constructor(id, login, password, phone) {
         this.id = id
-
-        if (!createdAt || !updatedAt) {
-            const dateNow = new Date()
-            
-            createdAt = dateNow
-            updatedAt = dateNow
-        }
-
-        this.createdAt = createdAt
-        this.updatedAt = updatedAt
+        this.login = login
+        this.password = password
+        this.phone = phone
     }
 
     get id() { return this._id }
@@ -23,51 +13,37 @@ class User {
         this._id = value.trim()
     }
 
+    get login() { return this._login }
 
-    get name() { return this._name }
-
-    set name(value) {
-        value = value.trim()
-        if (User.isUndefinedOrEmpty(value)) {
-            throw new Error('name cannot be undefined or empty')
+    set login(value) {
+        const newValue = value?.trim()
+        if (User.isUndefinedOrEmpty(newValue)) {
+            throw new Error('login cannot be undefined or empty')
         }
 
-        this._name = value
+        this._login = newValue
     }
 
-    get surname() { return this._surname }
+    get password() { return this._password }
 
-    set surname(value) {
-        value = value.trim()
-        if (User.isUndefinedOrEmpty(value)) {
-            throw new Error('surname cannot be undefined or empty')
+    set password(value) {
+        const newValue = value?.trim()
+        if (User.isUndefinedOrEmpty(newValue)) {
+            throw new Error('password cannot be undefined or empty')
         }
 
-        this._surname = value
+        this._password = newValue
     }
 
-    get createdAt() { return this._createdAt }
+    get phone() { return this._phone }
 
-    set createdAt(value) {
-        if ((value instanceof Date) == false) {
-            value = new Date(value)
+    set phone(value) {
+        const newValue = value?.trim()
+        if (User.isUndefinedOrEmpty(newValue)) {
+            throw new Error('phone cannot be undefined or empty')
         }
-        
-        if (!value || value.getTime() > this.updatedAt?.getTime())
-            throw new Error("createdAt cannot be more than updatedAt")
-        this._createdAt = value
-    }
-    
-    get updatedAt() { return this._updatedAt }
 
-    set updatedAt(value) {
-        if ((value instanceof Date) == false) {
-            value = new Date(value)
-        }
-        
-        if (!value || value.getTime() < this.createdAt.getTime())
-            throw new Error("updatedAt cannot be less than createdAt")
-        this._updatedAt = value
+        this._phone = newValue
     }
 
     static isUndefinedOrEmpty(value) {
@@ -76,11 +52,10 @@ class User {
 
     static fromFirestoreData(data) {
         return new User(
-            data.name, 
-            data.surname, 
-            data.id, 
-            data.createdAt.toDate(), 
-            data.updatedAt.toDate()
+            data.id,
+            data.login,
+            data.password,
+            data.phone,
         )
     }
 
@@ -89,10 +64,9 @@ class User {
 
         const firestoreData = {
             id: user.id,
-            name: user.name,
-            surname: user.surname,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt
+            login: user.login,
+            password: user.password,
+            phone: user.phone,
         }
 
         if (showId === false) {
