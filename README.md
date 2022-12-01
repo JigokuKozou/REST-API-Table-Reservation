@@ -1,10 +1,19 @@
 # REST-API-Table-Reservation
-_REST API app_
+Приложение запускающее сервер к которому можно отправлять различные ниже пречисленные http запросы для изменения облачной базы данных firestore
 
-__Приватный ключ__ необходимо помемтить по пути __util/serviceAccount.json__
+## Подготовка к запуску
+__Приватный ключ__ необходимо помеcтить по пути __util/serviceAccount.json__
 
-http://localhost:8080/api
-  ## /table - столы 
+Установить требуемые пакеты:
+* cors
+* express
+* firebase-admin
+* nodemod (only for dev "npm run dev")
+
+>http://localhost:8080/api - базовый адрес, к которому будем добавлять перечисленные ниже прибавочные
+
+
+  ## Tables - столы
     {
       "id": "id",
       "number": number,
@@ -14,43 +23,39 @@ http://localhost:8080/api
    >Number стола должен быть уникальным, если в базе уже есть такой номер, то не получится добавить/изменить номер стола.
 
 __Требуемые поля:__
- * create POST Body { number, countSeats }
- * getAll GET [/](http://localhost:8080/api/table) 
- * get GET [/id](http://localhost:8080/api/table/id)
- * update PUT Body { id, ...изменяемый/(-е) параметр(-ы) }
- * delete DEL [/id](http://localhost:8080/api/table/id)
+ * create POST [/table](http://localhost:8080/api/table) Body `{ number, countSeats }`
+ * getAll GET [/tables](http://localhost:8080/api/tables) 
+ * get GET [/table/id](http://localhost:8080/api/table/id)
+ * update PUT [/table](http://localhost:8080/api/table) Body `{ id, ...изменяемый/(-е) параметр(-ы) }`
+ * delete DEL [/table/id](http://localhost:8080/api/table/id)
 
- ## /person - люди
+ ## Users - пользователи
     {
       "id": "id",
-      "name": "Name",
-      "surname": "Surname",
-      "createdAt": "dateInISO",
-      "updatedAt": "dateInISO"
+      "login": "login",
+      "password": "password",
+      "phone": "+7XXXXXXXXXX"
     }
-  __Date in ISO__
-  >example: 2022-11-28T12:22:18.698Z
-  Date.toISOString()
 
 __Требуемые поля:__
- * create POST Body { number, countSeats }
- * getAll GET [/](http://localhost:8080/api/person)
- * get GET [/id](http://localhost:8080/api/person)
- * update PUT Body { id, ...изменяемый/(-е) параметр(-ы) }
- * delete DEL [/id](http://localhost:8080/api/person/id)
+ * create POST [/user](http://localhost:8080/api/user) Body `{ number, countSeats }`
+ * getAll GET [/users](http://localhost:8080/api/users) 
+ * get GET [/user/id](http://localhost:8080/api/user/id)
+ * update PUT [/user](http://localhost:8080/api/user) Body `{ id, ...изменяемый/(-е) параметр(-ы) }`
+ * delete DEL [/user/id](http://localhost:8080/api/user/id)
 
-##  /reservation - бронирования
+##  Reservation - бронирования
     {
       "id": "Id",
       "tableId": "tableId",
-      "personId": "personId",
+      "userId": "userId",
       "bookingStartDate": "dateInISO",
       "bookingEndDate": "dateInISO"
     }
 
 __Требуемые поля:__
- * create POST Body _{ tableId, personId, bookingStartDate, bookingEndDate }_
- * getAll GET [/](http://localhost:8080/api/reservation)
- * get GET [/id](http://localhost:8080/api/reservation/id)
- * update PUT Body { id, ...изменяемый/(-е) параметр(-ы) }
- * delete DEL [/id](http://localhost:8080/api/reservation/id)
+ * create POST [/reservation](http://localhost:8080/api/reservation) Body `{ tableId, userId, bookingStartDate, bookingEndDate }`
+ * getAll GET [/reservations](http://localhost:8080/api/reservations)
+ * get GET [/reservation/id](http://localhost:8080/api/reservation/id)
+ * update PUT [/reservation](http://localhost:8080/api/reservation) Body `{ id, ...изменяемый/(-е) параметр(-ы) }`
+ * delete DEL [/reservation/id](http://localhost:8080/api/reservation/id)
