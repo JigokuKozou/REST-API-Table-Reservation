@@ -67,12 +67,17 @@ class Reservation {
         this.bookingEndDate = bookingEndDate
     }
 
-    isInRangeBooking(date) {
+    isDateInRangeBooking(date) {
         return this.bookingStartDate.getTime() <= date.getTime() && date.getTime() <= this.bookingEndDate.getTime()
     }
 
+    isDateRangeInRangeBooking(start, end) {
+        return this.isDateInRangeBooking(start) || this.isDateInRangeBooking(end)
+    }
+
     isCrossBookingDate(other) {
-        return this.isInRangeBooking(other.bookingStartDate) || this.isInRangeBooking(other.bookingEndDate)
+        return this.isDateRangeInRangeBooking(other.bookingStartDate, other.bookingEndDate) ||
+            other.isDateRangeInRangeBooking(this.bookingStartDate, this.bookingEndDate)
     }
 
     static fromFirestoreData(data) {
