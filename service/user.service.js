@@ -8,7 +8,11 @@ class UserService extends Service {
 
     async create(requestedUser) {
         const user = User.fromFirestoreData(requestedUser)
-        
+
+        if (await this.isPhoneExists(user.phone)) {
+            throw new Error("User's phone is already exists")
+        }
+
         return super.create(user)
     }
     
@@ -42,6 +46,12 @@ class UserService extends Service {
 
     static snapshotToUser(snapshot) {
         return User.fromFirestoreData({ id: snapshot.id, ...snapshot.data() })
+    }
+
+    async isPhoneExists(phone) {
+        const snapshots = await this.database.where('phone', '==', phone).get()
+
+        return snapshots?.docs?.length > 0
     }
 }
 
