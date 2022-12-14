@@ -1,35 +1,21 @@
 # REST-API-Table-Reservation
-Приложение запускающее сервер к которому можно отправлять различные ниже пречисленные http запросы для изменения облачной базы данных firestore
+CRUD приложение к которому можно отправлять различные ниже пречисленные HTTP запросы для 
+изменения облачной базы данных Firestore.
 
 ## Подготовка к запуску
-__Приватный ключ__ необходимо помеcтить по пути __util/serviceAccount.json__
+__Приватный ключ__ необходимо помеcтить по пути `util/serviceAccount.json`.
 
-Установить требуемые пакеты:
+__Установить требуемые пакеты:__
 * cors
 * express
 * firebase-admin
-* nodemod (only for dev "npm run dev")
+* _nodemod (only for dev "npm run dev")_
 
 >http://localhost:8080/api - базовый адрес, к которому будем добавлять перечисленные ниже прибавочные
 
-
-  ## Tables - столы
-    {
-      "id": "id",
-      "number": number,
-      "countSeats": number
-    }
-
-   >Number стола должен быть уникальным, если в базе уже есть такой номер, то не получится добавить/изменить номер стола.
-
-__Требуемые поля:__
- * create POST [/table](http://localhost:8080/api/table) Body `{ number, countSeats }`
- * getAll GET [/tables](http://localhost:8080/api/tables) 
- * get GET [/table/id](http://localhost:8080/api/table/id)
- * update PUT [/table](http://localhost:8080/api/table) Body `{ id, ...изменяемый/(-е) параметр(-ы) }`
- * delete DEL [/table/id](http://localhost:8080/api/table/id)
-
  ## Users - пользователи
+> [/users](http://localhost:8080/api/users) - прибавочный адрес для базы пользователей
+
     {
       "id": "id",
       "login": "login",
@@ -38,24 +24,34 @@ __Требуемые поля:__
     }
 
 __Требуемые поля:__
- * create POST [/user](http://localhost:8080/api/user) Body `{ number, countSeats }`
- * getAll GET [/users](http://localhost:8080/api/users) 
- * get GET [/user/id](http://localhost:8080/api/user/id)
- * update PUT [/user](http://localhost:8080/api/user) Body `{ id, ...изменяемый/(-е) параметр(-ы) }`
- * delete DEL [/user/id](http://localhost:8080/api/user/id)
+ * __Создать__, метод запроса: POST, требуется тело содержащее `{ login, password, phone }`
+ * __Получить всех__, метод запроса: GET
+ * __Получить по id__, метод запроса: GET, требуется параметр [/id](http://localhost:8080/api/users/id)
+ * __Обновить__, метод запроса: PUT, требуется тело содержащее `{ id, ...изменяемый/(-е) параметр(-ы) }`
+ * __Удалить__, метод запроса:  DEL, требуется параметр [/id](http://localhost:8080/api/users/id)
 
 ##  Reservation - бронирования
+> [/reservations](http://localhost:8080/api/reservations) - прибавочный адрес для базы пользователей
+> 
     {
       "id": "Id",
       "tableId": "tableId",
       "userId": "userId",
       "bookingStartDate": "dateInISO",
-      "bookingEndDate": "dateInISO"
+      "bookingEndDate": "dateInISO",
+      "phone": "phone",
+      "login": "login",
+      "isDeleted": false/true
     }
-
+is
 __Требуемые поля:__
- * create POST [/reservation](http://localhost:8080/api/reservation) Body `{ tableId, userId, bookingStartDate, bookingEndDate }`
- * getAll GET [/reservations](http://localhost:8080/api/reservations)
- * get GET [/reservation/id](http://localhost:8080/api/reservation/id)
- * update PUT [/reservation](http://localhost:8080/api/reservation) Body `{ id, ...изменяемый/(-е) параметр(-ы) }`
- * delete DEL [/reservation/id](http://localhost:8080/api/reservation/id)
+ * __Создать__ POST Body `{ tableId, userId, bookingStartDate, bookingEndDate }`
+также опциональные (необязательные) поля `{ phone, login }`, isDeleted по умолчанию false
+ * __Получить всех__, метод запроса: GET
+ * __Получить по id__, метод запроса: GET, требуется параметр [/id](http://localhost:8080/api/reservations/id)
+ * __Получить всех по userId__, метод запроса: GET, требуется параметр ``id`` [/user/id](http://localhost:8080/api/reservations/user/id)
+ * __Получить всех по phone__, метод запроса: GET, требуется параметр ``phone`` [/phone/phone](http://localhost:8080/api/reservations/user/id)
+ * __Получить всех по login__, метод запроса: GET, требуется параметр ``login`` [/login/login](http://localhost:8080/api/reservations/user/id)
+ * __Получить всех по tableId__, метод запроса: GET, требуется параметр ``id`` [/table/id](http://localhost:8080/api/reservations/user/id)
+ * __Обновить__, метод запроса: PUT, требуется тело содержащее `{ id, ...изменяемый/(-е) параметр(-ы) }`
+ * __Удалить__, метод запроса:  DEL, требуется параметр [/id](http://localhost:8080/api/reservations/id)
