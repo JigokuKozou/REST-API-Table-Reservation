@@ -1,9 +1,9 @@
 class User {
-    constructor(id, login, password, phone) {
-        this.id = id
+    constructor(login, password, phone, id) {
         this.login = login
         this.password = password
         this.phone = phone
+        this.id = id
     }
 
     get id() { return this._id }
@@ -16,34 +16,29 @@ class User {
     get login() { return this._login }
 
     set login(value) {
-        const newValue = value?.trim()
-        if (User.isUndefinedOrEmpty(newValue)) {
-            throw new Error('login cannot be undefined or empty')
-        }
-
-        this._login = newValue
+        this._login = User.getValid(value, "login")
     }
 
     get password() { return this._password }
 
     set password(value) {
-        const newValue = value?.trim()
-        if (User.isUndefinedOrEmpty(newValue)) {
-            throw new Error('password cannot be undefined or empty')
-        }
-
-        this._password = newValue
+        this._password = User.getValid(value, "password")
     }
 
     get phone() { return this._phone }
 
     set phone(value) {
+        this._phone = User.getValid(value, "phone")
+    }
+
+    static getValid(value, nameValue) {
         const newValue = value?.trim()
+
         if (User.isUndefinedOrEmpty(newValue)) {
-            throw new Error('phone cannot be undefined or empty')
+            throw new Error(nameValue + ' cannot be undefined or empty')
         }
 
-        this._phone = newValue
+        return newValue
     }
 
     static isUndefinedOrEmpty(value) {
@@ -52,10 +47,10 @@ class User {
 
     static fromFirestoreData(data) {
         return new User(
-            data.id,
             data.login,
             data.password,
             data.phone,
+            data.id,
         )
     }
 

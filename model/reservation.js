@@ -1,9 +1,14 @@
+import User from "./user.js";
+
 class Reservation {
-    constructor(tableId, userId, bookingStartDate, bookingEndDate, id) {
+    constructor(tableId, userId, bookingStartDate, bookingEndDate, phone, login, isDeleted, id) {
         this.tableId = tableId
         this.userId = userId
         this.bookingStartDate = bookingStartDate
         this.bookingEndDate = bookingEndDate
+        this.phone = phone
+        this.login = login
+        this.isDeleted = isDeleted
         this.id = id
     }
 
@@ -13,7 +18,7 @@ class Reservation {
         if (value == undefined)
             throw new Error("tableId value cannot be undefined")
 
-        this._tableId = value
+        this._tableId = Number(value)
     }
 
     get userId() { return this._userId }
@@ -60,6 +65,18 @@ class Reservation {
         this._bookingEndDate = value
     }
 
+    get login() { return this._login }
+
+    set login(value) {
+        this._login = User.getValid(value, "login")
+    }
+
+    get phone() { return this._phone }
+
+    set phone(value) {
+        this._phone = User.getValid(value, "phone")
+    }
+
     setBookingTime(bookingStartDate, bookingEndDate) {
         this._bookingStartDate = this._bookingEndDate = undefined
 
@@ -86,6 +103,9 @@ class Reservation {
             data.userId, 
             data.bookingStartDate.toDate(), 
             data.bookingEndDate.toDate(),
+            data.phone,
+            data.login,
+            data.isDeleted,
             data.id
         )
     }
@@ -98,7 +118,10 @@ class Reservation {
             tableId: reservation.tableId,
             userId: reservation.userId,
             bookingStartDate: reservation.bookingStartDate,
-            bookingEndDate: reservation.bookingEndDate
+            bookingEndDate: reservation.bookingEndDate,
+            phone: reservation.phone,
+            login: reservation.login,
+            isDeleted: reservation.isDeleted
         }
 
         if (showId === false) {

@@ -1,6 +1,5 @@
 import Service from './service.js'
 import Reservation from '../model/reservation.js'
-import tableService from '../service/table.service.js'
 import userService from './user.service.js'
 
 class ReservationService extends Service {
@@ -8,8 +7,12 @@ class ReservationService extends Service {
         super('Reservations', 'reservation')
     }
 
-    async create({ tableId, userId, bookingStartDate, bookingEndDate }) {
-        const reservation = new Reservation(tableId, userId, bookingStartDate, bookingEndDate)
+    async create({ tableId, userId, bookingStartDate, bookingEndDate, phone, login }) {
+
+        phone = phone || (await userService.get(userId)).phone;
+        login = login || (await userService.get(userId)).login;
+
+        const reservation = new Reservation(tableId, userId, bookingStartDate, bookingEndDate, phone, login, false)
 
         await this.checkValidityReservation(reservation)
 
@@ -24,8 +27,9 @@ class ReservationService extends Service {
         return super.get(id, ReservationService.snapshotToReservation)
     }
     
-    async update({ id, tableId, userId, bookingStartDate, bookingEndDate }) {
-        const update = await super.update({ id, tableId, userId, bookingStartDate, bookingEndDate }, 
+    async update({ id, tableId, userId, bookingStartDate, bookingEndDate, phone, login, isDeleted }) {
+
+        const update = await super.update({ id, tableId, userId, bookingStartDate, bookingEndDate, phone, login, isDeleted },
             ReservationService.snapshotToReservation)
 
         const documentReference = update.documentReference
@@ -33,6 +37,8 @@ class ReservationService extends Service {
 
         reservation.tableId = tableId || reservation.tableId
         reservation.userId = userId || reservation.userId
+        reservation.phone = phone || (await userService.get(userId)).phone;
+        reservation.login = login || (await userService.get(userId)).login;
         reservation.setBookingTime(bookingStartDate || reservation.bookingStartDate, bookingEndDate || reservation.bookingEndDate)
         
         await this.checkValidityReservation(reservation)
@@ -46,16 +52,33 @@ class ReservationService extends Service {
         return super.delete(id)
     }
 
-    async getAllTableReservations(tableId) {
-        const snapshots = await this.database.where('tableId', '==', tableId).get()
+
+    async getAllByPhone(phone) {
+        return this.getAllByField('phone', phone);
+    }
+
+    async getAllByUserId(userId) {
+        return this.getAllByField('userId', userId);
+    }
+
+    async getAllByLogin(login) {
+        return this.getAllByField('login', login);
+    }
+
+    async getAllByTable(tableId) {
+        return this.getAllByField('tableId', Number(tableId));
+    }
+
+    async getAllByField(fieldName, fieldValue) {
+        const snapshots = await this.database.where(fieldName, '==', fieldValue).get()
         const reservations = snapshots.docs.map((snapshot) => Reservation.fromFirestoreData({ id: snapshot.id, ...snapshot.data() }))
 
         return reservations
     }
 
     async checkValidityReservation(reservation) {
-        if (await ReservationService.isTableExist(reservation.tableId) === false) {
-            throw new Error('Table is not exist')
+        if (await ReservationService.isTableValid(reservation.tableId) === false) {
+            throw new Error('Table is not valid')
         }
 
         if (await ReservationService.isUserExist(reservation.userId) === false) {
@@ -67,8 +90,8 @@ class ReservationService extends Service {
         }
     }
 
-    static async isTableExist(tableId) {
-        return (await tableService.get(tableId)) !== undefined
+    static async isTableValid(tableId) {
+        return 0 < tableId;
     }
 
     static async isUserExist(userId) {
@@ -76,7 +99,7 @@ class ReservationService extends Service {
     }
 
     async isReservationBookingTimeValid(reservation) {
-        const tableReservations = await this.getAllTableReservations(reservation.tableId)
+        const tableReservations = await this.getAllByTable(reservation.tableId)
         return tableReservations.some(x => reservation.id !== x.id && reservation.isCrossBookingDate(x)) === false
     }
 

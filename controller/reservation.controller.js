@@ -23,6 +23,50 @@ class ReservationController {
             console.log(e)
         }
     }
+
+    async getAllByPhone(req, res) {
+        try {
+            const reservations = await reservationService.getAllByPhone(req.params.phone)
+
+            res.json(reservations.map(ReservationController.toJson))
+        } catch (e) {
+            res.status(500).json(e.message)
+            console.log(e)
+        }
+    }
+
+    async getAllByUserId(req, res) {
+        try {
+            const reservations = await reservationService.getAllByUserId(req.params.id)
+
+            res.json(reservations.map(ReservationController.toJson))
+        } catch (e) {
+            res.status(500).json(e.message)
+            console.log(e)
+        }
+    }
+
+    async getAllByLogin(req, res) {
+        try {
+            const reservations = await reservationService.getAllByLogin(req.params.login)
+
+            res.json(reservations.map(ReservationController.toJson))
+        } catch (e) {
+            res.status(500).json(e.message)
+            console.log(e)
+        }
+    }
+
+    async getAllByTableId(req, res) {
+        try {
+            const reservations = await reservationService.getAllByTable(req.params.id)
+
+            res.json(reservations.map(ReservationController.toJson))
+        } catch (e) {
+            res.status(500).json(e.message)
+            console.log(e)
+        }
+    }
     
     async get(req, res) {
         try {
