@@ -43,7 +43,7 @@ __Требуемые поля:__
       "login": "login",
       "isDeleted": false/true
     }
-is
+
 __Требуемые поля:__
  * __Создать__ POST Body `{ tableId, userId, bookingStartDate, bookingEndDate }`
 также опциональные (необязательные) поля `{ phone, login }`, isDeleted по умолчанию false
